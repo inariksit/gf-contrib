@@ -1,5 +1,7 @@
 concrete CatGramLambda of CatGram = {
 
+--Just ignore this file, nothing interesting so far
+
   lincat
     S, NP = Str ;
 
@@ -8,8 +10,5 @@ concrete CatGramLambda of CatGram = {
     Walk x       =  "(\\x . walk' x )" ++ x;
     Marcel       = "marcel'" ;
     Completeness = "completeness'" ;
-    That s       = "That" ++ "(" ++ s ++ ")" ;
-
-
 
 }
