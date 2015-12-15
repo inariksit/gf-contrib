@@ -1,0 +1,1 @@
+concrete LangPidg of Lang = GrammarPidg, LexiconPidg ;
