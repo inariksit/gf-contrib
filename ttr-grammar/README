@@ -1,0 +1,71 @@
+(c) Aarne Ranta 2016 under BSD license
+
+Experimental Haskell implementation of Type Theory with Records. Functionalities:
+- BNF grammar for TTR source files
+- parsing TTR source files
+- type checking TTR source files
+- evaluating TTR expressions
+- printing TTR source in Latex (two-dimensional records, math symbols, etc)
+
+
+Based on TTR examples in
+- Cooper & Ginzburg, Handbook, 2015
+  https://hal.archives-ouvertes.fr/hal-01138034/file/rc-jg-ttrsem-final%20(1).pdf
+
+In addition, some arithmetical expressions are added to allow computations.
+
+Usage: from Unix shell
+
+  runhaskell TryTTR                     -- open TTR shell where expressions can be evaluated and type checked
+                              <file>    -- type check file, open shell for evaluation an type checking in context of file
+		    - nocheck <file>    -- the same, without type checking the file
+		    - tex     <file>    -- convert file to latex code (no type checking)
+
+From TTR shell:
+
+  ? <Exp>    infer type of expression
+  ! <Jment>  check judgement
+  <Exp>      evaluate expression
+  q          quit
+  h          print this help message
+
+Examples:
+
+  runhaskell TryTTR -tex ex2.ttr >ex2.tex   -- followed by pdflatex ex2.pdf
+  runhaskell TryTTR ex6.ttr                 -- for evaluation and type checking
+  runhaskell TryTTR -nocheck ex2.ttr        -- for evaluation (does not type check because it contains undeclared constants)
+
+  TTR> 2+2
+  4
+  
+  TTR> ? "007"
+  String
+
+  TTR> ! 007 : String
+  type mismatch in 7:
+  inferred Int <> expected String
+
+
+The implementation is based on
+- BNFC, as parser and skeleton generator:
+  http://bnfc.digitalgrammars.com/
+- AR, "Implementing Programming Languages", for general methodology and expression evaluation:
+  http://www1.digitalgrammars.com/ipl-book/
+- Thierry Coquand, "An algorithm for type checking dependent types", for type checking:
+  http://www.cse.chalmers.se/~coquand/type.ps
+- Björn Bringert and AR, "A pattern for almost compositional functions", for efficient tree traversal
+  http://www.cse.chalmers.se/alumni/bringert/publ/composOp-jfp/composOp-jfp.pdf
+ 
+
+Notice:
+- The implementation uses "deep embedding", which means that TTR is completely isolated from Haskell.
+- The type checking algorithm is based on a model-theoretic interpretation of TTR (see Coquand's paper)
+
+
+To do:
+- more subtyping support (now supports limited structural record subtyping with co- and contravariance)
+- refine the treatment of union, intersection, complement, join, merge types
+- bug fixes, in particular in the type checking of records
+
+
+

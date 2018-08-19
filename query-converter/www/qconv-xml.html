@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html> <head>
+<title>Query-converter – XML Validation and XPath queries</title>
+<meta charset="UTF-8">
+<meta name = "viewport" content = "width = device-width">
+<link rel=stylesheet href="qconv.css" title="QConv">
+<link rel=up href="." title="Query Converter Online">
+</head>
+
+<body>
+<header>
+<h1>Query Converter</h1>
+</header>
+
+<nav>
+<a href="qconv-er.html">ER modelling</a> |
+<a href="qconv-nf.html">BCNF analysis</a> |
+<a href="qconv-enf.html">3NF and 4NF analysis</a> |
+<a href="qconv-a.html">Relational Algebra</a> |
+<a href="qconv-i.html">SQL Interpreter</a> |
+<b>XML &amp; XPath</b>
+</nav>
+
+<main>
+
+<h2>XML validation and XPath queries</h2>
+
+<form id=ERform action="qconv.cgi">
+<table>
+<tr><td colspan=2>
+<input type="hidden" name="command" value="ix">
+<label>1. Enter the XML document below, or </label>
+<input id=example1 type=button value="Use an XML example">,
+<label>or upload a file:</label>
+<input id=browse type=file accept="text/plain">
+<tr><td colspan=2><textarea id=file name=file rows=10 cols=72></textarea>
+<tr><td><label>2. <input onclick="ERform.command.value='ix'" type=submit value="Validate"></label>
+<td style="text-align: right"><input type=reset value="Clear">
+<tr><td colspan=2>
+
+<tr><td colspan=2><div id=validationOutput></div>
+<tr><td colspan=2><label>3. Enter an XPath query below
+  (example: <code id=xpathexample>/QConvData//@name</code>):</label>
+<tr><td colspan=2><input name=query size=75>
+<tr><td colspan=2><label>4. <input onclick="ERform.command.value='xp'" type=submit value="Run Query"></label>
+</table>
+</form>
+<div id=ERdiagram>
+</div>
+</main>
+
+<footer>
+<div class=modtime><small>
+  <!-- hhmts start -->Last modified: Thu Mar  1 15:29:08 CET 2018 <!-- hhmts end -->
+  </small>
+</div>
+</footer>
+<script src="qconv.js"></script>
+<script>
+example1.onclick=function() {
+  file.value=['<? xml version="1.0" encoding="utf-8" standalone="no" ?> <! DOCTYPE QConvData [<! ELEMENT QConvData teachers *>',
+ '<! ELEMENT teachers EMPTY>',
+ '<! ATTLIST teachers name CDATA #REQUIRED title CDATA #REQUIRED>',
+ ']> <QConvData>',
+ '<teachers name = "Wolowitz" title = "research engineer"/>',
+ '<teachers name = "Abel" title = "associate professor"/>',
+ '<teachers name = "Ranta" title = "professor"/>',
+ '<teachers name = "Kemp" title = "professor"/>',
+ '</QConvData>'].join("\n")
+
+}
+
+browse.onchange=function() { uploadFileTo(file) }
+file.onchange=function() { validationOutput.innerHTML="" }
+function showResult(responseText) {
+  if(ERform.command.value=="ix") validationOutput.innerHTML=responseText
+  else ERdiagram.innerHTML=responseText
+}
+
+ERform.onsubmit=function(event) { return postForm(ERform,showResult) }
+ERform.onreset=function() {
+    validationOutput.innerHTML=""
+    ERdiagram.innerHTML=""
+}
+
+xpathexample.onclick=function() { ERform.query.value=xpathexample.innerText }
+
+var xmlDocument=sessionStorage["qconv.xmlDocument"]
+if(xmlDocument && file.value=="") file.value=xmlDocument
+</script>
+</body>
+</html>

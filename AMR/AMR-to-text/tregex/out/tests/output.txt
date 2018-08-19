@@ -1,0 +1,385 @@
+TestTrees: t01_girls_see_a_boy
+TestTreesEng: a girl sees a boy .
+TestTreesLav: meitene redz zēnu .
+TestTreesRus: девочка видит мальчика .
+
+TestTrees: t02_the_boy_is_seen_by_the_girls
+TestTreesEng: a girl sees a boy .
+TestTreesLav: meitene redz zēnu .
+TestTreesRus: девочка видит мальчика .
+
+TestTrees: t03_two_girls_see_a_boy
+TestTreesEng: 2 girls see a boy .
+TestTreesLav: 2 meitenes redz zēnu .
+TestTreesRus: 2 девочки видят мальчика .
+
+TestTrees: t04_two_pretty_girls_see_a_boy
+TestTreesEng: 2 pretty girls see a boy .
+TestTreesLav: 2 jaukas meitenes redz zēnu .
+TestTreesRus: 2 хорошенькие девочки видят мальчика .
+
+TestTrees: t05_the_boy_sees_the_two_pretty_girls
+TestTreesEng: a boy sees 2 pretty girls .
+TestTreesLav: zēns redz 2 jaukas meitenes .
+TestTreesRus: мальчик видит 2 хорошеньких девочк .
+
+TestTrees: t06_girls_and_boys_play_a_game
+TestTreesEng: a girl and a boy play a game .
+TestTreesLav: meitene , un zēns spēlē spēli .
+TestTreesRus: девочка и мальчик играют игру .
+
+TestTrees: t07_boys_girls_and_a_dog_play_a_game
+TestTreesEng: a dog , a boy and a girl play a game .
+TestTreesLav: suns , zēns , un meitene spēlē spēli .
+TestTreesRus: мальчик , девочка и собака играют игру .
+
+TestTrees: t08_many_persons_live
+TestTreesEng: many persons live .
+TestTreesLav: daudzas personas dzīvo .
+TestTreesRus: много лицoов живёт .
+
+TestTrees: t09_some_persons_live_in_Ventspils
+TestTreesEng: some persons live in Ventspils .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t10_many_persons_live_in_Riga
+TestTreesEng: many persons live in Riga .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t11_more_persons_live_in_New_York
+TestTreesEng: more persons live in New York .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t13_few_persons_live_in_Riga_and_New_York
+TestTreesEng: few persons live in Riga and New York .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t14_boys_and_girls_play_games_in_Riga
+TestTreesEng: a boy and a girl play a game in Riga .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t15_boys_and_girls_play_games_in_Riga_and_New_York
+TestTreesEng: a boy and a girl play a game in Riga and New York .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t16_boys_see_Ann
+TestTreesEng: a boy sees Ann .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t17_John_plays_a_game
+TestTreesEng: John plays a game .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t18_John_sees_Ann
+TestTreesEng: John sees Ann .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t19_girls_see_some_boys_who_play_a_game
+TestTreesEng: a girl sees some boys that play a game .
+TestTreesLav: meitene redz kādus zēnus , kas spēlē spēli .
+TestTreesRus: девочка видит некоторого мальчиков , которых играют игру .
+
+TestTrees: t20_girls_see_some_pretty_boys_who_play_a_ball_game
+TestTreesEng: a girl sees some pretty boys that play a ball game .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t21_girls_who_see_the_game_like_the_boys_who_play
+TestTreesEng: a girl that sees a game likes a boy that plays .
+TestTreesLav: meitenei , kas redz spēli , patīk zēns , kas spēlē .
+TestTreesRus: девочка , которая видит игру нравдит мальчика , которого играет .
+
+TestTrees: t22_Assad_spoke_about_the_city
+TestTreesEng: Assad speaks about a city .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t23_Assad_spoke_about_the_two_cities
+TestTreesEng: Assad speaks about 2 cities .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t24_Assad_spoke_a_word_about_the_city
+TestTreesEng: Assad speaks a word about a city .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t25_the_boy_is_a_person
+TestTreesEng: a boy is a person .
+TestTreesLav: zēns ir persona .
+TestTreesRus: мальчик лицo .
+
+TestTrees: t26_Iceland_is_a_very_interesting_example
+TestTreesEng: Iceland is an example that is very interesting .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t27_they_are_thugs_and_deserve_a_bullet
+TestTreesEng: they are a thug and it deserves a bullet .
+TestTreesLav: viņi ir slepkava , un pelna lodi .
+TestTreesRus: они буян и заслужите пулю .
+
+TestTrees: t28_China_president_urges_child_safety
+TestTreesEng: president of China urges to protect a child .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t29_French_far_left_killer_leaves_jail
+TestTreesEng: a far left person from France that kills leaves a jail .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t30_two_other_school_assailants_have_committed_suicide
+TestTreesEng: 2 other persons that assail a school commit a suicide .
+TestTreesLav: 2 citas personas , kas uzbrūk skolai , izdara pašnāvību .
+TestTreesRus: 2 другие лицoа , которого нападет на школу совершите суицид .
+
+TestTrees: t31_Gadhafi_attacks_US_in_speech_in_Italy
+TestTreesEng: Gadhafi attacks US when it speaks in Italy .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t32_we_must_look_at_their_reasons
+TestTreesEng: we are obligated to look their reason .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t33_the_man_Xu_Yuyuan_wielded_a_knife_usually_used_to_slaughter_pigs
+TestTreesEng: Xu Yuyuan wields a knife that is usually used to slaughter a pig .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t34_Libyan_Abdel_Basset_Ali_al_Megrahi_was_convicted_of_blowing_up_the_plane
+TestTreesEng: Abdel Basset Ali al-Megrahi from Libya is convicted to blow up a plane .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t35_a_fourth_member_Jean_Marc_Rouillan_remains_behind_bars
+TestTreesEng: Jean-Marc Rouillan , that is the 4th member , is remained behind a bar .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t36_I_d_never_heard_of_this_case_until_now
+TestTreesEng: I don't hear this case until now .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t37_so_I_googled_it_to_get_more_information
+TestTreesEng: I google it to get more information .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t38_even_the_information_that_is_available_is_fuzzy
+TestTreesEng: available information is even fuzzy .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t39_as_for_the_race_angle_it_is_unnecessary
+TestTreesEng: a race angle isn't needed .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t40_it_s_a_horrible_thing_that_happened
+TestTreesEng: a horrible thing .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t41_you_are_an_idiot
+TestTreesEng: you are an idiot .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t42_they_need_to_throw_these_punks_in_jail
+TestTreesEng: they are obligated to throw this punk to a jail .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t43_they_should_have_been_expelled_from_school_at_a_minimum
+TestTreesEng: it is recommended that they are expelled to a school at a minimum .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t44_my_opinion_is_based_on_the_information_provided
+TestTreesEng: a thing that I opine is based to information that is provided .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t45_Texas_criminal_courts_and_prosecutors_do_not_coddle_to_anyone
+TestTreesEng: a criminal court in Texas and a person that prosecutes don't coddle anyone .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t46_I_don_t_think_it_is_a_race_issue_either
+TestTreesEng: I either think that it isn't a race issue .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t47_the_girl_is_very_nice_and_the_boy_is_very_good
+TestTreesEng: a girl is very nice and a boy is very good .
+TestTreesLav: meitene ir ļoti jauka , un zēns ir ļoti labs .
+TestTreesRus: 
+
+TestTrees: t48_women_are_horny_as_hell
+TestTreesEng: a woman is as hell horny !
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t49_is_it_a_possibility_there_is_another_side_to_this
+TestTreesEng: is it possible that there is another side of this ?
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t50_the_girl_left_because_the_boy_arrived
+TestTreesEng: a girl leaves because a boy arrives .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t51_due_to_historical_reasons_what_originally_belongs_us_has_become_controversial
+TestTreesEng: because there is a history reason a thing that originally belongs to us is become a controversy .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t52_the_people_are_already_incredibly_fully_equipped
+TestTreesEng: a person is already incredibly fully equipped .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t53_never_go_back_to_that_time_when_signing_the_treaties
+TestTreesEng: you don't ever go back to that time when we sign a treaty !
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t54_Radio_Nepal_reported_that_3_policemen_were_killed_and_19_others_wounded_when_their_vehicle_was_ambushed_by_guerrillas_in_western_Nepal
+TestTreesEng: Radio Nepal reports that 3 policemen are killed and 1 &+ 9 other policemen are wounded when a guerrilla ambushes a vehicle in the West of Nepal .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t55_I_don_t_know_if_anyone_will_read_this
+TestTreesEng: I don't know if anyone reads this .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t56_it_was_unclear_whether_combat_had_taken_place_between_Russian_and_Georgian_soldiers_or_had_been_limited_to_fighting_between_separatists_and_Georgian_forces
+TestTreesEng: it isn't clear if a soldier from Russia and a soldier from Georgia combat or it is limited to fight between a separatist and a force .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t57_especially_China_suffered_the_ravages_of_Japan
+TestTreesEng: especially China suffers that Japan ravages .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t58_I_started_university_in_September
+TestTreesEng: I start a university in September .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t59_we_have_been_broken_up_since_August
+TestTreesEng: we are broken up since August .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t60_I_started_university_on_1_September_1999
+TestTreesEng: I start a university on 1 September 1999 .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t61_I_started_university_in_1999
+TestTreesEng: I start a university in 1999 .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t64_youngest_brother_is_a_tender_youth
+TestTreesEng: youngest brother is tender youth .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t65_I_d_recommend_you_go_and_see_your_doctor
+TestTreesEng: I recommend that you go to see doctor .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t66_two_successful_companies_enter_the_market_in_a_big_way
+TestTreesEng: 2 successful companies enter a market in a big way .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t67_how_long_are_we_going_to_tolerate_Japan
+TestTreesEng: how long do we tolerate Japan ?
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t68_how_do_we_fly
+TestTreesEng: how do we fly ?
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t69_how_can_we_fly
+TestTreesEng: how is it possible that we fly ?
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t70_what_did_the_girl_find
+TestTreesEng: what does a girl find ?
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t71_where_did_the_girl_find_the_boy
+TestTreesEng: where does a girl find a boy ?
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t72_create_a_few_battle_groups
+TestTreesEng: few battle groups are created .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t73_I_suffer_from_random_panic_attacks
+TestTreesEng: I suffer a random panic attack .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t74_the_list_names_companies_that_were_prevented_from_carrying_out_deals
+TestTreesEng: a list names a company that is prevented to carry out a deal .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t75_I_have_tried_to_solve_my_problems
+TestTreesEng: I try to solve a problem .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t77_if_you_tell_people_they_can_help_you
+TestTreesEng: it is possible that a person helps you if it tells .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t78_what_do_Chinese_still_tolerate
+TestTreesEng: what does a person from China still tolerate ?
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t79_Xinhua_News_Agency_Tokyo_September_1st_by_reporter_Yiguo_Yu
+TestTreesEng: Xinhua News Agency by Yiguo Yu on 1 September in Tokyo .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t80_i_have_sevral_slits_on_my_arm
+TestTreesEng: I have several slits in my arm .
+TestTreesLav: 
+TestTreesRus: 
+
+TestTrees: t81_Looks_like_we_still_need_to_train_more_outdoors
+TestTreesEng: it is looked that we still need to train more outdoors .
+TestTreesLav: 
+TestTreesRus: 
+

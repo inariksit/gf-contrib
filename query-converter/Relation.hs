@@ -19,13 +19,18 @@ type Id = String
 qualify :: Id -> Id -> Id
 qualify q c = if null q then c else (q ++ "." ++ c)
 
+unqualify :: Id -> (Id,Id)
+unqualify qc = case break (=='.') qc of
+  (q,_:c) -> (q,c)
+  _ -> ("",qc)
+
 type Tuple = [Value]
 type LabelMap = M.Map Id (Int,Type)
 
-data Value = VString String | VInt Integer | VNull | VError String
+data Value = VString String | VInt Integer | VFloat Double | VNull | VError String
   deriving (Eq,Ord,Show)
 
-data Type = TString | TInt
+data Type = TString | TInt | TFloat
   deriving (Eq,Ord,Show)
 
 lookLabel :: LabelMap -> Id -> (Int,Type)
@@ -61,13 +66,15 @@ prValue :: Value -> String
 prValue v = case v of
   VString s -> "'" ++ s ++ "'"
   VInt i -> show i
+  VFloat i -> show i
   VNull  -> "NULL"
   VError s -> "ERROR " ++ s
 
 prType :: Type -> String
 prType ty = case ty of
   TInt -> "INT"
-  TString -> "VARCHAR" 
+  TFloat -> "FLOAT"
+  TString -> "TEXT" 
 
 -- verify that label maps have the same labels with the same types; positions can differ
 isSameType :: Table -> Table -> Bool
@@ -178,10 +185,11 @@ intAggr f = \vs ->
 distinct :: Table -> Table
 distinct t = t{tdata = nub (tdata t)}
 
-sortby :: [Id] -> Table -> Table
-sortby ls t = t{tdata = sortBy projs (tdata t)}
+sortby :: [(Table -> Tuple -> Value,Bool)] -> Table -> Table
+sortby ls tbl = tbl{tdata = sortBy projs (tdata tbl)}
   where
-    proj u = [u !! i | (i,_) <- map (lookLabel (tindex t)) ls]
+----    proj u = [u !! i | (i,_) <- map (lookLabel (tindex t)) ls]
+    proj u = [f tbl u | (f,dir) <- ls] ---- TODO: direction Desc=True, Asc=False
     projs u v = compare (proj u) (proj v)
 
 thetaJoin :: (Tuple -> Tuple -> Bool) -> Table -> Table -> Table

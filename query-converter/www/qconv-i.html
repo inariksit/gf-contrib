@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html> <head>
+<title>Query-converter – SQL interpreter</title>
+<meta charset="UTF-8">
+<meta name = "viewport" content = "width = device-width">
+<link rel=stylesheet href="qconv.css" title="QConv">
+<link rel=up href="." title="Query Converter Online">
+</head>
+
+<body>
+<header>
+<h1>Query Converter</h1>
+</header>
+
+<nav>
+<a href="./qconv-er.html">ER modelling</a> |
+<a href="./qconv-nf.html">BCNF analysis</a> |
+<a href="./qconv-enf.html">3NF and 4NF analysis</a> |
+<a href="./qconv-a.html">Relational Algebra</a> |
+<b>SQL Interpreter</b> |
+<a href="qconv-xml.html">XML &amp; XPath</a>
+</nav>
+
+<main>
+
+<h2>SQL interpreter</h2>
+
+<form id=ERform action="qconv.cgi">
+<table>
+<tr><td class=label>1.<td colspan=2>
+<input type="hidden" name="command" value="i">
+<label>Enter the SQL script below, or </label>
+<input id=example1 type=button value="Use an SQL example">,
+<label>or upload a file:</label>
+<input id=browse type=file> <!-- accept="text/plain"-->
+<tr><td><td colspan=2><textarea id=file name=file rows=11 cols=72></textarea>
+  <tr><td class=label>2.<td colspan=2><label><input name=queryResults type=checkbox checked>
+    Include query results in the output</label>
+  <tr><td><td colspan=2>
+    <label><input name=xmlDocument type=checkbox checked>
+    Include XML representation of final database in the output</label>
+<tr><td class=label>3.<td><label><input type=submit value="Run SQL script"></label>
+<td style="text-align: right"><input type=reset value="Clear">
+</table>
+</form>
+<div id=ERdiagram>
+</div>
+
+</main>
+
+<footer>
+<div class=modtime><small>
+  <!-- hhmts start -->Last modified: Thu Mar  1 15:29:22 CET 2018 <!-- hhmts end -->
+  </small>
+</div>
+</footer>
+<script src="qconv.js"></script>
+<script>
+example1.onclick=function() {
+  file.value=["CREATE TABLE Teachers (",
+	      "  name VARCHAR(32),",
+              "  title VARCHAR(16)",
+	      ") ;",
+              "",
+	      "INSERT INTO Teachers VALUES ('Kemp','professor') ;",
+	      "INSERT INTO Teachers VALUES ('Ranta','professor') ;",
+	      "INSERT INTO Teachers VALUES ('Abel','associate professor') ;",
+	      "INSERT INTO Teachers VALUES ('Wolowitz','research engineer') ;",
+              "",
+              "SELECT name FROM Teachers WHERE title LIKE '%professor' ;"]
+              .join("\n")
+}
+browse.onchange=function() { uploadFileTo(file) }
+
+function showResult(responseText) {
+    ERdiagram.innerHTML=responseText
+    if(window.xmlOutput) {
+        insertAfter(document.createTextNode(" page."),xmlOutput)
+        insertAfter(node("a",{href:"qconv-xml.html"},[document.createTextNode("XML & XPath")]),xmlOutput)
+        insertAfter(document.createTextNode(" This XML document is now available on the "),xmlOutput)
+        insertAfter(saveButton(xmlOutput.innerText,"Database.xml","text/xml"),xmlOutput)
+        sessionStorage["qconv.xmlDocument"]=xmlOutput.innerText
+    }
+}
+
+ERform.onsubmit=function() { return postForm(ERform,showResult) }
+ERform.onreset=function() { ERdiagram.innerHTML="" }
+</script>
+</body>
+</html>

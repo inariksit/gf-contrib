@@ -1,0 +1,40 @@
+-- Finnish annotations on top of UDTranslate.labels
+
+-- these functions have morphological conditions
+BareCN_   : CN -> NP ;        Number=Sing
+BareCN_ cn = MassNP cn
+BarePlCN_ : CN -> NP ;        Number=Plur
+BarePlCN_ cn = DetCN (DetQuant IndefArt NumPl) cn
+
+Predet DET lemma=kaikki
+
+-- syncategorematic words
+
+Neg_          VERB   lemma=ei
+
+
+PrPerf_       AUX    lemma=olla      VerbForm=Fin   Tense=Pres
+PaPerf_       AUX    lemma=olla      VerbForm=Fin   Tense=Past
+FuPerf_       AUX    lemma=olla      VerbForm=Inf
+
+
+
+PrCop_        VERB   lemma=olla      VerbForm=Fin   Tense=Pres
+PaCop_        VERB   lemma=olla      VerbForm=Fin   Tense=Past
+FuCop_        VERB   lemma=olla      VerbForm=Inf
+PartCop_      VERB   lemma=olla      VerbForm=Past  Tense=Past
+
+ThatMark_     SCONJ  lemma=että
+Comma_        PUNCT  lemma=,
+Amp_          PUNCT  lemma=&
+Orslash_      PUNCT  lemma=/
+
+-- Handling lexical entries for DConj types
+-- These have non-local dependencies. Functon configurations need to be manually edited
+Conjand_    		CONJ		lemma=että		
+Conjboth_   		CONJ		lemma=sekä		
+Conjeither_ 		CONJ		lemma=joko		
+Conjneither_		CONJ		lemma=ei		
+Conjnor_    		CONJ		lemma=eikä		
+Conjor_     		CONJ		lemma=tai		
+
