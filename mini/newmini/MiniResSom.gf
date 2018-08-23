@@ -2,44 +2,66 @@ resource MiniResSom = open Prelude in {
 
 param
   Number = Sg | Pl ;
-  Case = Nom | Acc ;
+  Case = Nom | Abs ;
   Gender = Masc | Fem ;
   Person = Per1 | Per2 | Per3 ;
 
   Inclusion = Excl | Incl ;
   Agreement = Sg1 | Sg2 | Sg3 Gender | Pl1 Inclusion | Pl2 | Pl3 ;
 
-  Defi = Def | Indef ;
-  NForm = NF Number Defi | Numerative | Poss Agreement ;
-  --TODO: cases (or contracted prepositions)?, focus markers
-
-  VForm = Inf | PresSg3 ;
-
-oper
-  getAgr : Number -> Gender -> Agreement = \n,g ->
-    case n of { Sg => Sg3 g ; Pl => Pl3 } ;
-  getNum : Agreement -> Number = \a ->
-    case a of { Sg1|Sg2|Sg3 _ => Sg ; _ => Pl } ;
-
-  Noun : Type = {s : NForm => Str ; g : Gender} ;
 
 
-
+--TODO: more cases (or contracted prepositions)?, determinative (not in mini resource), …
+-- Determinativt kii / tii
+-- Substantivens determinativa form bildas genom att den bestämda grundformens –a eller subjektsformens –u ersätts med ändelsen –ii som anger att föremålet utgör en gemensam bekant bakgrundsinformation.
+-- Den determinativa formen kan även ersätta slutvokalen i de possessiva ändelserna.
   -- Den determinativa ändelsen –kii/–tii används när man vill framhålla att ett bestämt föremål inte bara är allmänt bestämt utan dessutom förväntas vara känt sedan tidigare för den som man talar med.
   -- Det somaliska determinativa morfemet kii/tii har möjligen en något bredare användning, eftersom det markerat att talaren anser att lyssnare borde känna till det som substantivet refererar till.
   -- mundul·kii·sii   -- kii is the morpheme, what is sii?
+
+  NForm = Indef Number -- The base form
+        | Def   Number -- With definite article
+        | Poss Agreement  -- Added possessive suffix. Mostly based on Def form, but some nouns
+                          --  (kinship etc.) use short forms, which are distinct.
+        | Numerative ; -- When modified by a number (only distinct for some feminine nouns)
+  
+
+oper
+  getAgr : NForm -> Gender -> Agreement = \n,g ->
+    case n of { Indef Pl|Def Pl => Pl3 ;
+                _               => Sg3 g } ;
+  getNum : Agreement -> Number = \a ->
+    case a of { Sg1|Sg2|Sg3 _ => Sg ; _ => Pl } ;
+
+  --TODO: can probably make this leaner and have just stems in NForm, if case is regular?
+  -- -u for nouns and pronouns, -i for demonstratives -- how about adding the ending in DetCN/MassNP, UsePron and DetCN with &+, and no case in the tables? Wait to see which other forms are needed.
+  Noun : Type = {s : NForm => Case => Str ; g : Gender} ;
+
+  CNoun : Type = Noun ** { mod : NForm => Case => Str } ;
+
+  --TODO: figure out some nice minimum number of stems
   mkNoun : (x1,_,_,x4 : Str) -> Gender -> Noun = \a,b,c,d,gender ->
-    { s = table { NF Sg Indef => a ;
-                  NF Sg Def   => b ;
-                  NF Pl Indef => c ;
-                  NF Pl Def   => d ;
-                  Numerative  => a ;
-                  Poss Sg1 => b + case gender of { Fem => "yda" ; Masc => "yga" } ;
-                  Poss Sg2 => b + case gender of { Fem => "ada" ; Masc => "aga" } ;
-                  Poss _ => b + ":TODO:poss" } ; --check page 40
+    { s = table { Indef Sg|Numerative => \\_ => a ;
+                  Indef Pl => \\_ => c ;
+                  Def   Sg => addCase b [] ;
+                  Def   Pl => addCase d [] ;
+                  Poss Sg1 => addCase b (case gender of { Fem => "ayd" ; Masc => "ayg" }) ;
+                  Poss Sg2 => addCase b (case gender of { Fem => "aad" ; Masc => "aag" }) ;
+                  Poss Pl2 => addCase b "iinn" ;
+                  Poss Pl3 => addCase b "ood" ;
+                  Poss (Sg3 Fem) => addCase b "iis" ;
+                  Poss (Sg3 Masc)=> addCase b "eed" ;
+                  Poss _ => addCase b ":TODO:Pl1-poss" } ; --check page 40
       g = gender } ;
 
-
+  addCase : Str -> Str -> Case=>Str = \ilkaha,iis ->
+    let dupl : Str -> {p1 : Str ; p2 : Str} = \x -> <x,x> ;
+        stems : {p1 : Str ; p2 : Str} = case <ilkaha,iis> of {
+                        <ilk + "aha", "i" + is> => dupl (ilk + "ih" + iis) ;
+                        <ilk + "aha", ""      > => <ilk + "uh", init ilkaha> ;
+                        <magac + "a", ood     > => dupl (magac + ood) ;
+                        _                       => dupl (ilkaha+"-"+iis) } ;
+     in table { Nom => stems.p1 + "u" ; Abs => stems.p2 + "a" } ;
 
   -- Regular noun paradigms
   nHooyo, nAabbe, nMas, nUl, nGuri, nXayawaan : Str -> Noun ;
@@ -50,7 +72,7 @@ oper
 
   --2) Masculine nouns that end in -e
   nAabbe aabbe = let aabb = init aabbe in
-    mkNoun aabbe (aabb + "aaha") (aabb + "ayaal") (aabb + "ayaásha") Masc ;
+    mkNoun aabbe (aabb + "aha") (aabb + "ayaal") (aabb + "ayaasha") Masc ;
 
   -- 3) Masculine, plural with duplication
   nMas mas = let s = last mas in
@@ -62,7 +84,7 @@ oper
                sha = allomorph Ta ul ;
                ulood = ul + o + "od" ;
                n = mkNoun ul (u + sha) (ul + o) (ul + "aha") Fem in
-    n ** { s = table { Numerative => ulood ; x => n.s ! x } } ;
+    n ** { s = table { Numerative => \\_ => ulood ; x => n.s ! x } } ;
 
   -- 4b) Masculine, plural with ó, 2 syllables
   nGuri guri = let o = allomorph O guri ;
@@ -83,7 +105,7 @@ oper
     case x of {
       O => case last stem of {
                   d@("b"|"d"|"r"|"l"|"m"|"n") => d + "o" ;
-                  "c"|"g"                     => "yo" ; --TODO other sounds?
+                  "c"|"g"|"i"                 => "yo" ; --TODO other sounds?
                   _                           => "o" } ;
 
       -- Based on the table on page 21--TODO find generalisations in patterns
@@ -93,13 +115,20 @@ oper
                    _   => "ta" } ;
 
       Ka => case stem of {
-                   _ + "g"|"aa"|"i"|"y"|"w" => "ga" ;
-                   _ + "c"|"h"|"x"|"q"|"'"  => "a" ;
-                   _ + "e"|"o"              => "ha" ;
-                   _                        => "ka" }
+                   _ + ("g"|"aa"|"i"|"y"|"w") => "ga" ;
+                   _ + ("c"|"h"|"x"|"q"|"'")  => "a" ;
+                   _ + ("e"|"o")              => "ha" ;
+                   _                          => "ka" }
     } ;
 
-param Morpheme = O | Ka | Ta ;
+
+
+  caseForm : (NForm => Str) -> NForm -> Str -> Str = \s,nf,u -> case nf of {
+    Numerative|Indef _ => s ! nf ;
+    _                  => glue (s ! nf) u } ;
+
+param
+  Morpheme = O | Ka | Ta ;
 
 oper
 
@@ -117,16 +146,21 @@ oper
   --Substantiv som slutar på –e är så gott som alltid maskulina, t.ex. dúbbe hammare, fúre nyckel.
   -- För övriga ord säger ordets form dessvärre väldigt lite om ordets genus. Däremot kan betoningens plats i ordet väldigt ofta avslöja ordets genus. Man kan alltså i flesta fall höra vilket genus ett substantiv har.
 
-  mkN : Str -> Noun = \n -> case n of {
 
-      _ + "d" => nUl n ;
+  mkN = overload {
+
+   mkN : Str -> Noun = mkN1 ;
+   mkN : Str -> Gender -> Noun = \n,g ->
+     mkN1 n ** { g = g }
+  } ;
+
+  mkN1 : Str -> Noun = \n -> case n of {
+      _ + "ad" => nUl n ;
       _ + "e" => nAabbe n ;
       _ + "o" => nHooyo n ;
+      _ + "r" => nGuri n ;
       #c + #v + #c | #c + #v + #v + #c | #v + #c  => nMas n ;
-      _ => nXayawaan n 
-   } ;
-
-
+      _ => nXayawaan n } ;
 --------------------------------------------------------------------------------
 oper
 
@@ -143,16 +177,64 @@ oper
     { s = table { Sg => yar ; Pl => duplicate yar } } ;
 
   duplicate : Str -> Str = \yar -> case yar of {
+    "dheer" => "dhaadheer" ;
+    "weyn"  => "waaweyn" ; -- TODO eventually handle irregular adjectives elsewhere
     y@#c + a@#v + r@#c + _ => y + a + r + yar ;
     g@#c + aa@#vv      + _ => g + aa + yar ; --TODO: proper patterns
     _                      => yar + ":plural" } ;
 --------------------------------------------------------------------------------
--- oper
 
---   Verb : Type = { s : VForm => Str } ;
+-- Verb
+-- De somaliska verben böjs i
+-- tre tempus (presens, preteritum, futurum),
+-- tre aspekter (enkel, progressiv, habituell),
+-- fem modus (indikativ, imperativ, konjunktiv, kontiditonalis, optativ),
+-- tre personer, (första, andra, tredje),
+-- två numerus (singular, plural),
+-- två genus (maskulinum, femininum).
+
+--Den somaliska infinitivformen används bara tillsammans med en hand- full hjälpverb, bl.a. doonaa kommer att, jiray brukade, karaa kan, waayaa klarar inte, lahaa skulle...
+
+param
+   VForm = VInf | VPres Agreement ;
+
+oper
+
+   Verb : Type = { s : VForm => Str } ;
 
 -- Negationen má `inte' skrivs samman med en föregående preposition.
 -- Prepositionen u dras obligatoriskt samman med föregående pronomen så att /a/ + /u/ > /oo/.
 
 
+   -- TODO: attributiva kortformen ah "som är" av kopulaverbet
+   copula : Verb = {
+     s = table { VInf      => "TODO:inf" ;
+                 VPres Sg1 => "ahay" ;
+                 VPres Sg2 => "tahay" ;
+                 VPres Pl2 => "tihiin" ;
+                 VPres Pl3 => "yihiin" ;
+                 VPres (Sg3 Masc) => "yahay" ;
+                 VPres (Sg3 Fem)  => "tahay" ;
+                 VPres (Pl1 _)    => "nahay" }
+     } ;
+   -- I somaliskan används inte något kopulaverb motsvarande svenskans är mellan
+   -- två substantivfraser som utgör subjekt respektive predikatsfyllnad.
+   -- Observera också att kopulaverbet vara alltid hamnar efter det adjektiv
+   -- som utgör predikatsfyllnaden.
+
+-- Till VERBFRASEN ansluter sig
+-- · satstypsmarkörer (waa, ma...),
+-- · subjekts-pronomenet la man,
+-- · objektspronomenen,
+-- · prepositionerna och
+-- · riktnings-adverben soó (mot en plats/person), sií (bort frånen plats/person), wadá tillsammans (mot en gemensam punkt), kalá iväg, isär (bort från en gemensam punkt).
+-- Riktningsadverben har ibland en mycket konkret betydelse, men många gånger är betydelsen mera abstrakt.
+
+-- Till satsmarkörerna, dvs. både fokusmarkörerna och satstypsmarkörerna ansluter sig
+-- subjektspronomenen aan, aad, uu, ay, aynu, men inte la (man).
+
+{- I 1 och 2 person används i princip alltid det korta subjektspronomet i påståendesatser.
+I 3 person utelämnas däremot oftast det korta subjektspronomenet uu han eller ay hon, de efter satsmarkören waa om predikatet består av adjektiv + yahay / tahay / yihiin är.
+Även i satser med andra verb i predikatet utelämnas det korta subjekts- pronomenet i 3 person någon gång ibland.
+-}
 }

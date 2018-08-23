@@ -2,67 +2,54 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
 
 
   lincat
-    Utt = {s : Str} ;
-    -- Adv = Adverb ;
-    -- Pol = {s : Str ; b : Bool} ;
-    
-    -- S  = {s : Str} ;
-    -- Cl = {s : Bool => Str} ;
-    -- VP = {verb : GVerb ; compl : Str} ;
+    Utt = SS ;
+    Adv = SS ;
+    Pol = {s : Str ; p : Bool} ;
+    S  = SS ;
+    Cl = {s : Bool => Str} ;
+    VP = Verb ** { compl : Agreement => Str} ;
     AP = Adjective ;
-    CN = Noun ** { adj : NForm => Str } ;
-    NP = {s : Str ; a : Agreement} ;
-    -- Pron = {s : Case => Str ; a : Agreement} ;
-    Det = {s : Str ; sp : Gender => Str ; n : Number ; d : Defi} ;
+    CN = CNoun ;
+    NP = {s : Case => Str ; a : Agreement} ;
+    Pron = {s : Case => Str ; a : Agreement} ;
+    Det = {s : Str ; sp : Gender => Str ; d : NForm } ;
     -- Conj = {s : Str} ;
     -- Prep = {s : Str} ;
-    -- V = Verb ;
-    -- V2 = Verb2 ;
+    V = Verb ;
+--    V2 = Verb2 ;
     A = Adjective ;
     N = Noun ;
     -- PN = ProperName ;
 
   lin
---    UttS s = s ;
-    UttNP np = np ;
-{-
+    UttS s = s ;
+    UttNP np = { s = np.s ! Abs } ;
     UsePresCl pol cl = {
-      s = pol.s ++ cl.s ! pol.b
+      s = cl.s ! pol.p
       } ;
     PredVP np vp = {
       s = \\b =>
-           np.s ! Nom 
-	++ case <b, np.a, vp.verb.isAux> of {
-	    <True, Agr Sg Per1,_> => vp.verb.s ! PresSg1 ;
-	    <True, Agr Sg Per3,_> => vp.verb.s ! VF PresSg3 ;
-	    <True, _          ,_> => vp.verb.s ! PresPl ;
-	    <False, Agr Sg Per1,True>  => vp.verb.s ! PresSg1 ++ "not" ;
-	    <False, Agr Sg Per3,True>  => vp.verb.s ! VF PresSg3 ++ "not" ;
-	    <False, _          ,True>  => vp.verb.s ! PresPl ++ "not" ;
-	    <False, Agr Sg Per3,False> => "does not" ++ vp.verb.s ! VF Inf ;
-	    <False, _          ,False> => "do not" ++ vp.verb.s ! VF Inf
-	    }
-        ++ vp.compl ;
+           np.s ! Nom
+        ++ if_then_Str b "waa" "ma"  --satstypmarkörer
+	++ vp.s ! VPres np.a
+        ++ vp.compl ! np.a ;
       } ;
-      
-    UseV v = {
-      verb = verb2gverb v ;
-      compl = []
-      } ;
-    ComplV2 v2 np = {
-      verb = verb2gverb v2 ;
-      compl = v2.c ++ np.s ! Acc
-      } ;
+
+    UseV v = v ** { compl = \\_ => [] } ;
+{-
+    ComplV2 v2 np = v2 ** {
+      compl = v2.c ++ np.s ! Abs
+      } ; -}
     UseAP ap = {
-      verb = be_GVerb ;
-      compl = ap.s
+      s = \\x => case x of { VPres a => ap.s ! getNum a ++ copula.s ! x ;
+                             VInf    => ap.s ! Sg ++ copula.s ! x } ; ---dummy
+      compl = \\_ => []
       } ;
     AdvVP vp adv =
-      vp ** {compl = vp.compl ++ adv.s} ;
-      -}
-    DetCN det cn = let nf = NF det.n det.d in {
-      s = (cn.s ! nf) ++ det.s ++ cn.adj ! nf ;
-      a = getAgr det.n cn.g
+      vp ** { compl = \\x => vp.compl ! x ++ adv.s } ;
+    DetCN det cn = {
+      s = \\c => cn.s ! det.d ! c ++ det.s ++ cn.mod ! det.d ! c ;
+      a = getAgr det.d cn.g
       } ;
     -- UsePN pn = {
     --   s = \\_ => pn.s ;
@@ -71,37 +58,39 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
     -- UsePron p =
     --   p ;
     MassNP cn = {
-      s = cn.s ! NF Sg Indef ++ cn.adj ! NF Sg Indef ;
+      s = table { Nom => cn.s ! Def Sg ! Nom   ++ cn.mod ! Def Sg ! Nom ;
+                  Abs => cn.s ! Indef Sg ! Abs ++ cn.mod ! Indef Sg ! Abs } ;
       a = Sg3 cn.g 
       } ;
-    a_Det = {s = "" ; sp = \\_ => "TODO:a_Det" ; n = Sg ; d = Indef} ;
-    aPl_Det = a_Det ** { n = Pl } ;
-    
-    -- This is actually this/these; just to test stuff
-    the_Det = { s = BIND ++ "n" ; -- To be glued onto the definite form of noun
+
+    UseN n = n ** { mod = \\_,_ => [] } ;
+
+    a_Det = {s = "" ; sp = \\_ => "TODO:a_Det" ; d = Indef Sg} ;
+    aPl_Det = a_Det ** { d = Indef Pl } ;
+    the_Det = { s = [] ; -- To be glued onto the definite form of noun
                sp = table { Fem => "tan" ; Masc => "kan" } ; -- tani, kani for DetNP
-                n = Sg ; d = Def } ;
-    thePl_Det = { s = "" ; sp = \\_ => "kuwan" ; n = Pl ; d = Def } ;
-    UseN n = n ** { adj = \\_ => [] } ;
+                d = Def Sg } ;
+    thePl_Det = { s = "" ; sp = \\_ => "kuwan" ; d = Def Pl } ;
 
 -- Bestämdhetskongruens
 -- När ett substantiv binds som attribut till ett annat substantiv med hjälp av den attributiva kortformen ah som är av kopulaverbet yahay är, då måste båda substantiven vara antingen obestämda eller bestämda. Man kan alltså säga att de kongruerar med avseende på bestämdhet, t.ex.
     AdjCN ap cn = cn ** {
-      s = cn.s ;
-      adj = table {NF n Def => glue (ap.s ! n) "ga:(correct allomorph)" ; --TODO right allomorph
-                   Poss a   => ap.s ! getNum a ;
-                   x        => ap.s ! Sg}
+      s = \\nf,cas => cn.s ! nf ! Abs ; -- When an adjective is added, it will carry subject marker.
+      mod = \\nf,cas => case nf of {
+                         Def n   => glue (ap.s ! n) "ga:(correct allomorph)" ; --TODO right allomorph
+                         Indef n => ap.s ! n ;
+                         x       => ap.s ! Sg }
       } ;
 
     PositA a = a ;
 
-{-    PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
+{-    PrepNP prep np = {s = prep.s ++ np.s ! Abs} ;
 
-    CoordS conj a b = {s = a.s ++ conj.s ++ b.s} ;
+    CoordS conj a b = {s = a.s ++ conj.s ++ b.s} ; -}
     
-    PPos  = {s = [] ; b = True} ;
-    PNeg  = {s = [] ; b = False} ;
-
+    PPos  = {s = [] ; p = True} ;
+    PNeg  = {s = [] ; p = False} ;
+{-
     and_Conj = {s = "and"} ;
     or_Conj = {s = "or"} ;
 
@@ -112,7 +101,7 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
     with_Prep = {s = "with"} ;
 
     i_Pron = {
-      s = table {Nom => "I" ; Acc => "me"} ;
+      s = table {Nom => "I" ; Abs => "me"} ;
       a = Agr Sg Per1
       } ;
     youSg_Pron = {
@@ -120,15 +109,15 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
       a = Agr Sg Per2
       } ;
     he_Pron = {
-      s = table {Nom => "he" ; Acc => "him"} ;
+      s = table {Nom => "he" ; Abs => "him"} ;
       a = Agr Sg Per3
       } ;
     she_Pron = {
-      s = table {Nom => "she" ; Acc => "her"} ;
+      s = table {Nom => "she" ; Abs => "her"} ;
       a = Agr Sg Per3
       } ;
     we_Pron = {
-      s = table {Nom => "we" ; Acc => "us"} ;
+      s = table {Nom => "we" ; Abs => "us"} ;
       a = Agr Pl Per1
       } ;
     youPl_Pron = {
@@ -136,7 +125,7 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
       a = Agr Pl Per2
       } ;
     they_Pron = {
-      s = table {Nom => "they" ; Acc => "them"} ;
+      s = table {Nom => "they" ; Abs => "them"} ;
       a = Agr Pl Per2
       } ;
 -}
