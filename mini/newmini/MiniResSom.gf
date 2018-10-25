@@ -1,5 +1,9 @@
 resource MiniResSom = open Prelude in {
 
+
+--------------------------------------------------------------------------------
+-- Nominal morphology
+
 param
   Number = Sg | Pl ;
   Case = Nom | Abs ;
@@ -24,7 +28,7 @@ param
         | Poss Agreement  -- Added possessive suffix. Mostly based on Def form, but some nouns
                           --  (kinship etc.) use short forms, which are distinct.
         | Numerative ; -- When modified by a number (only distinct for some feminine nouns)
-  
+
 
 oper
   getAgr : NForm -> Gender -> Agreement = \n,g ->
@@ -63,7 +67,8 @@ oper
                         _                       => dupl (ilkaha+"-"+iis) } ;
      in table { Nom => stems.p1 + "u" ; Abs => stems.p2 + "a" } ;
 
-  -- Regular noun paradigms
+-------------------------
+-- Regular noun paradigms
   nHooyo, nAabbe, nMas, nUl, nGuri, nXayawaan : Str -> Noun ;
 
   --1) Feminine nouns that end in -o
@@ -78,7 +83,7 @@ oper
   nMas mas = let s = last mas in
     mkNoun mas (mas + "ka") (mas + "a" + s) (mas + "a" + s + "ka") Masc ;
 
-  -- 4a) Feminine, plural with ó 
+  -- 4a) Feminine, plural with ó
   nUl ul = let o  = case last ul of { "i" => "yo" ; _ => "o" } ;
                u  = case last ul of { "l" => init ul ; _ => ul } ;
                sha = allomorph Ta ul ;
@@ -100,7 +105,7 @@ oper
                     xo = x + o in
     mkNoun x (x + ka) xo (init xo + "ada") Masc ;
 
-  
+
   allomorph : Morpheme -> Str -> Str = \x,stem ->
     case x of {
       O => case last stem of {
@@ -121,11 +126,16 @@ oper
                    _                          => "ka" }
     } ;
 
+  voiced : Str -> Str = \s -> case s of {
+    "k" => "g" ;
+    "t" => "d" ;
+    "p" => "b" ;
+     _  => s } ;
 
-
-  caseForm : (NForm => Str) -> NForm -> Str -> Str = \s,nf,u -> case nf of {
-    Numerative|Indef _ => s ! nf ;
-    _                  => glue (s ! nf) u } ;
+  -- don't remember what this was supposed to be
+  -- caseForm : (NForm => Str) -> NForm -> Str -> Str = \s,nf,u -> case nf of {
+  --   Numerative|Indef _ => s ! nf ;
+  --   _                  => glue (s ! nf) u } ;
 
 param
   Morpheme = O | Ka | Ta ;
@@ -161,7 +171,21 @@ oper
       _ + "r" => nGuri n ;
       #c + #v + #c | #c + #v + #v + #c | #v + #c  => nMas n ;
       _ => nXayawaan n } ;
+
+
 --------------------------------------------------------------------------------
+-- Pronouns, prepositions
+
+-- Prepositionen u dras obligatoriskt samman med föregående pronomen
+-- så att /a/ + /u/ > /oo/.
+
+-- Negationen má `inte' skrivs samman med en föregående preposition.
+--------------------------------------------------------------------------------
+-- Adjectives
+
+param
+  AForm = AIndef Number | ADef Number ; ----
+
 oper
 
  -- Komparativ
@@ -171,10 +195,17 @@ oper
  -- Motsvarigheten till svenskans superlativ bildas med prepositionsklustret ugú som till sin betydelse närmast motsvarar svenskans allra, t.ex.
  -- ugu horrayntii (det att komma) allra först
 
-  Adjective : Type = { s : Number => Str } ;
+  Adjective : Type = { s : AForm => Str } ;
 
   mkA : Str -> Adjective = \yar ->
-    { s = table { Sg => yar ; Pl => duplicate yar } } ;
+    let ga = allomorph Ka yar ;
+        yaryar = duplicate yar
+    in { s = table {
+           AIndef Sg => yar ;
+           AIndef Pl => yaryar ;
+           ADef Sg => yar + ga ;
+           ADef Pl => yaryar + ga }
+       } ;
 
   duplicate : Str -> Str = \yar -> case yar of {
     "dheer" => "dhaadheer" ;
@@ -182,46 +213,95 @@ oper
     y@#c + a@#v + r@#c + _ => y + a + r + yar ;
     g@#c + aa@#vv      + _ => g + aa + yar ; --TODO: proper patterns
     _                      => yar + ":plural" } ;
+
 --------------------------------------------------------------------------------
-
 -- Verb
--- De somaliska verben böjs i
--- tre tempus (presens, preteritum, futurum),
--- tre aspekter (enkel, progressiv, habituell),
--- fem modus (indikativ, imperativ, konjunktiv, kontiditonalis, optativ),
--- tre personer, (första, andra, tredje),
--- två numerus (singular, plural),
--- två genus (maskulinum, femininum).
-
---Den somaliska infinitivformen används bara tillsammans med en hand- full hjälpverb, bl.a. doonaa kommer att, jiray brukade, karaa kan, waayaa klarar inte, lahaa skulle...
 
 param
-   VForm = VInf | VPres Agreement ;
+   VForm =
+     VInf
+   | VPres Agreement
+   | VPast Agreement
+   | VFut -- agreement comes from auxiliary
+   | VRel -- "som är/har/…" TODO is this used in other verbs?
+   | VImp Number ;
+
+-- TODO:
+-- tre aspekter (enkel, progressiv, habituell),
+-- fem modus (indikativ, imperativ, konjunktiv, kontiditonalis, optativ)
 
 oper
 
-   Verb : Type = { s : VForm => Str } ;
 
--- Negationen má `inte' skrivs samman med en föregående preposition.
--- Prepositionen u dras obligatoriskt samman med föregående pronomen så att /a/ + /u/ > /oo/.
+  Verb : Type = { s : VForm => Str } ;
 
+  Verb2 : Type = Verb ** { c2 : Str } ;
 
-   -- TODO: attributiva kortformen ah "som är" av kopulaverbet
-   copula : Verb = {
-     s = table { VInf      => "TODO:inf" ;
-                 VPres Sg1 => "ahay" ;
-                 VPres Sg2 => "tahay" ;
-                 VPres Pl2 => "tihiin" ;
-                 VPres Pl3 => "yihiin" ;
-                 VPres (Sg3 Masc) => "yahay" ;
-                 VPres (Sg3 Fem)  => "tahay" ;
-                 VPres (Pl1 _)    => "nahay" }
+  mkVerb : (stem : Str) -> Verb = \ark ->
+    let stems : {p1 : Str ; p2 : Str} = case ark of {
+          a + r@#c + k@#c => <ark + "i", a + r + a + voiced k> ;
+          _               => <ark + "n", ark> } ;
+        arki = stems.p1 ;
+        arag = stems.p2 ;
+   in { s = table {
+          VPres Sg1        => ark + "aa" ;
+          VPres Sg2        => arag + "taa" ;
+          VPres (Sg3 Fem)  => arag + "taa" ;
+          VPres (Sg3 Masc) => ark + "aa" ;
+          VPres (Pl1 _)    => arag + "naa" ;
+          VPres Pl2        => arag + "taan" ;
+          VPres Pl3        => ark + "aan" ;
+
+          -- TODO
+          -- VPast Sg1        => "ahaa" ;
+          -- VPast Sg2        => "ahayd" ;
+          -- VPast (Sg3 Fem)  => "ahayd" ;
+          -- VPast (Sg3 Masc) => "ahaa" ;
+          -- VPast (Pl1 _)    => "ahayn" ;
+          -- VPast Pl2        => "ahaydeen" ;
+          -- VPast Pl3        => "ahaayeen" ;
+          VImp Sg          => arag ;
+          VInf             => arki ;
+          _  => "TODO" }
+      } ;
+
+  mkV2 : Str -> Verb2 = \s -> mkVerb s ** { c2 = [] } ;
+
+  copula : Verb = {
+    s = table { VPres Sg1        => "ahay" ;
+                VPres Sg2        => "tahay" ;
+                VPres (Sg3 Fem)  => "tahay" ;
+                VPres (Sg3 Masc) => "yahay" ;
+                VPres (Pl1 _)    => "nahay" ;
+                VPres Pl2        => "tihiin" ;
+                VPres Pl3        => "yihiin" ;
+
+                VPast Sg1        => "ahaa" ;
+                VPast Sg2        => "ahayd" ;
+                VPast (Sg3 Fem)  => "ahayd" ;
+                VPast (Sg3 Masc) => "ahaa" ;
+                VPast (Pl1 _)    => "ahayn" ;
+                VPast Pl2        => "ahaydeen" ;
+                VPast Pl3        => "ahaayeen" ;
+                VRel => "ah" ;
+                _    => "TODO:copula" } ;
      } ;
    -- I somaliskan används inte något kopulaverb motsvarande svenskans är mellan
    -- två substantivfraser som utgör subjekt respektive predikatsfyllnad.
    -- Observera också att kopulaverbet vara alltid hamnar efter det adjektiv
    -- som utgör predikatsfyllnaden.
-
+  have_V : Verb = {
+    s = table { VPres Sg1        => "leeyahay" ;
+                VPres Sg2        => "leedahay" ;
+                VPres (Sg3 Fem)  => "leedahay" ;
+                VPres (Sg3 Masc) => "leeyahay" ;
+                VPres (Pl1 _)    => "leenahay" ;
+                VPres Pl2        => "leedihiin" ;
+                VPres Pl3        => "leeyihiin" ;
+                VPast x          => "l" + copula.s ! VPast x ;
+                VRel => "leh" ;
+                _    => "TODO:have_V" } ;
+    } ;
 -- Till VERBFRASEN ansluter sig
 -- · satstypsmarkörer (waa, ma...),
 -- · subjekts-pronomenet la man,

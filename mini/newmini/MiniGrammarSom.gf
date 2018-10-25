@@ -16,7 +16,7 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
     -- Conj = {s : Str} ;
     -- Prep = {s : Str} ;
     V = Verb ;
---    V2 = Verb2 ;
+    V2 = Verb2 ;
     A = Adjective ;
     N = Noun ;
     -- PN = ProperName ;
@@ -36,13 +36,14 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
       } ;
 
     UseV v = v ** { compl = \\_ => [] } ;
-{-
+
     ComplV2 v2 np = v2 ** {
-      compl = v2.c ++ np.s ! Abs
-      } ; -}
+      compl = \\a => v2.c2 ++ np.s ! Abs
+      } ;
     UseAP ap = {
-      s = \\x => case x of { VPres a => ap.s ! getNum a ++ copula.s ! x ;
-                             VInf    => ap.s ! Sg ++ copula.s ! x } ; ---dummy
+      s = \\x => case x of { VPres a => ap.s ! AIndef (getNum a) ++ copula.s ! x ;
+                             VPast a => ap.s ! AIndef (getNum a) ++ copula.s ! x ;
+                             _       => ap.s ! AIndef Sg ++ copula.s ! x } ; ----
       compl = \\_ => []
       } ;
     AdvVP vp adv =
@@ -60,7 +61,7 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
     MassNP cn = {
       s = table { Nom => cn.s ! Def Sg ! Nom   ++ cn.mod ! Def Sg ! Nom ;
                   Abs => cn.s ! Indef Sg ! Abs ++ cn.mod ! Indef Sg ! Abs } ;
-      a = Sg3 cn.g 
+      a = Sg3 cn.g
       } ;
 
     UseN n = n ** { mod = \\_,_ => [] } ;
@@ -73,13 +74,16 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
     thePl_Det = { s = "" ; sp = \\_ => "kuwan" ; d = Def Pl } ;
 
 -- Bestämdhetskongruens
--- När ett substantiv binds som attribut till ett annat substantiv med hjälp av den attributiva kortformen ah som är av kopulaverbet yahay är, då måste båda substantiven vara antingen obestämda eller bestämda. Man kan alltså säga att de kongruerar med avseende på bestämdhet, t.ex.
+-- När ett substantiv binds som attribut till ett annat substantiv med hjälp av
+-- den attributiva kortformen ah som är av kopulaverbet yahay är, då måste båda
+-- substantiven vara antingen obestämda eller bestämda. Man kan alltså säga att
+-- de kongruerar med avseende på bestämdhet, t.ex.
     AdjCN ap cn = cn ** {
       s = \\nf,cas => cn.s ! nf ! Abs ; -- When an adjective is added, it will carry subject marker.
       mod = \\nf,cas => case nf of {
-                         Def n   => glue (ap.s ! n) "ga:(correct allomorph)" ; --TODO right allomorph
-                         Indef n => ap.s ! n ;
-                         x       => ap.s ! Sg }
+                         Def n   => ap.s ! ADef n  ;
+                         Indef n => ap.s ! AIndef n ;
+                         x       => ap.s ! AIndef Sg } ----
       } ;
 
     PositA a = a ;
@@ -87,7 +91,7 @@ concrete MiniGrammarSom of MiniGrammar = open MiniResSom, Prelude in {
 {-    PrepNP prep np = {s = prep.s ++ np.s ! Abs} ;
 
     CoordS conj a b = {s = a.s ++ conj.s ++ b.s} ; -}
-    
+
     PPos  = {s = [] ; p = True} ;
     PNeg  = {s = [] ; p = False} ;
 {-
