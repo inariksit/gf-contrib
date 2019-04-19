@@ -4,7 +4,7 @@ abstract MiniGrammar = {
 -- the functions marked ---s are shortcuts
 
   cat
-  
+
 -- Common
     Utt ;    -- sentence, question, word...         e.g. "be quiet"
     Adv ;    -- adverbial phrase                    e.g. "in the house"
@@ -21,7 +21,7 @@ abstract MiniGrammar = {
     Det ;    -- determiner phrase                   e.g. "those"
     Conj ;   -- conjunction                         e.g. "and"
     Prep ;   -- preposition, or just case           e.g. "in", dative
-    V ;      -- one-place verb                      e.g. "sleep" 
+    V ;      -- one-place verb                      e.g. "sleep"
     V2 ;     -- two-place verb                      e.g. "love"
     A ;      -- one-place adjective                 e.g. "warm"
     N ;      -- common noun                         e.g. "house"
@@ -39,6 +39,7 @@ abstract MiniGrammar = {
 -- Verb
     UseV      : V   -> VP ;             -- sleep
     ComplV2   : V2  -> NP -> VP ;       -- love it  ---s
+    ReflV2    : V2 -> VP ;              -- use itself -- Added by IL for demonstrating semantic transfer
     UseAP     : AP  -> VP ;             -- be small ---s
     AdvVP     : VP -> Adv -> VP ;       -- sleep here
 
@@ -70,7 +71,7 @@ abstract MiniGrammar = {
 -- Structural
     and_Conj  : Conj ;
     or_Conj   : Conj ;
-    
+
     every_Det : Det ;
 
     in_Prep   : Prep ;
@@ -84,5 +85,5 @@ abstract MiniGrammar = {
     we_Pron    : Pron ;
     youPl_Pron : Pron ;
     they_Pron  : Pron ;
-    
+
 }

@@ -5,10 +5,10 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
     Utt = {s : Str} ;
     Adv = Adverb ;
     Pol = {s : Str ; b : Bool} ;
-    
+
     S  = {s : Str} ;
     Cl = {s : Bool => Str} ;
-    VP = {verb : GVerb ; compl : Str} ;
+    VP = {verb : GVerb ; compl : Agreement => Str} ; -- Agr=>Str for reflexive
     AP = Adjective ;
     CN = Noun ;
     NP = {s : Case => Str ; a : Agreement} ;
@@ -31,7 +31,7 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
       } ;
     PredVP np vp = {
       s = \\b =>
-           np.s ! Nom 
+           np.s ! Nom
 	++ case <b, np.a, vp.verb.isAux> of {
 	    <True, Agr Sg Per1,_> => vp.verb.s ! PresSg1 ;
 	    <True, Agr Sg Per3,_> => vp.verb.s ! VF PresSg3 ;
@@ -42,24 +42,34 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
 	    <False, Agr Sg Per3,False> => "does not" ++ vp.verb.s ! VF Inf ;
 	    <False, _          ,False> => "do not" ++ vp.verb.s ! VF Inf
 	    }
-        ++ vp.compl ;
+        ++ vp.compl ! np.a ; -- for reflexive
       } ;
-      
+
     UseV v = {
       verb = verb2gverb v ;
-      compl = []
+      compl = \\a => []
       } ;
     ComplV2 v2 np = {
       verb = verb2gverb v2 ;
-      compl = v2.c ++ np.s ! Acc
+      compl = \\a => v2.c ++ np.s ! Acc
+      } ;
+    ReflV2 v2 = {
+      verb = verb2gverb v2 ;
+      compl = table {
+                Agr Sg Per1 => "myself" ;
+                Agr Sg Per2 => "yourself" ;
+                Agr Sg Per3 => "itself" ; -- simplification, no human referent
+                Agr Pl Per1 => "ourselves" ;
+                Agr Pl Per2 => "yourselves" ;
+                Agr Pl Per3 => "themselves" } ;
       } ;
     UseAP ap = {
       verb = be_GVerb ;
-      compl = ap.s
+      compl = \\a => ap.s
       } ;
     AdvVP vp adv =
-      vp ** {compl = vp.compl ++ adv.s} ;
-      
+      vp ** {compl =  \\a => vp.compl ! a ++ adv.s} ;
+
     DetCN det cn = {
       s = table {c => det.s ++ cn.s ! det.n} ;
       a = Agr det.n Per3
@@ -89,7 +99,7 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
     PrepNP prep np = {s = prep.s ++ np.s ! Acc} ;
 
     CoordS conj a b = {s = a.s ++ conj.s ++ b.s} ;
-    
+
     PPos  = {s = [] ; b = True} ;
     PNeg  = {s = [] ; b = False} ;
 
