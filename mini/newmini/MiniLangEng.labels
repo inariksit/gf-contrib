@@ -1,5 +1,0 @@
-* {"not"} PART neg head 
-* {"do","does"} AUX aux head 
-UseAP {"is","are","am","be"} VERB cop head
-
-
