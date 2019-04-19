@@ -1,6 +1,6 @@
 # Example of syntactic transfer
 
-This branch is a minimal example of semantic-preserving syntactic transfer.
+This is a minimal example of semantic-preserving syntactic transfer.
 
 I added a function called `ReflV2` into the old miniresource [abstract syntax](https://github.com/inariksit/gf-contrib/blob/ReflTransfer/mini/newmini/MiniGrammar.gf#L42):
 
