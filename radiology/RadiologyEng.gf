@@ -17,13 +17,13 @@ concrete RadiologyEng of Radiology =
   lin
     Pred org descn = mkS (topicAdv org) (descn.s ! positivePol.p) ; -- "the heart's size is normal"
     PredNeg org descn = mkS (topicAdv org) (descn.s ! negativePol.p) ;
-    Describe descr prop _ = {s = \\p => mkS (pol p) (mkCl prop descr)} ;
+    Describe descr prop proof = {s = \\p => mkS (lin Adv proof) (mkS (pol p) (mkCl prop descr))} ;
 
     Desc2 d1 d2 = {s = \\p => G.BaseS (d1.s ! p) (d2.s ! p)} ;
---    Desc3 d1 d2 d3 = {s = \\p => G.ConsS (d3.s ! p) (Desc2 d2 d1)} ;
+    Desc3 d1 d2 d3 = {s = \\p => G.ConsS (d3.s ! p) ((Desc2 d2 d1).s ! p)} ;
     Desc2as3 d = d ;
-    ConjDesc2 descs = {s = \\p => G.ConjS and_Conj (descs.s ! p)} ;
---    ConjDesc3 =
+    ConjDesc2,
+    ConjDesc3 = \descs -> {s = \\p => G.ConjS and_Conj (descs.s ! p)} ;
 
     AggregateProperty2 dr p q _ _ = {s = \\pl => mkS (pol pl) (mkCl (prop2 p q) dr)} ;
 
@@ -92,9 +92,7 @@ lin
     External_Location,
     Normal_Location,
     Abnormal_Location,
-    -- Normal_Size_Location,
-    -- Abnormal_Size_Location,
     mm_Size,
-    mm_lessThan_Size = ss "proof object" ;
+    mm_lessThan_Size = ss "" ;
 
 }
