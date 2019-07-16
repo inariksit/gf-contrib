@@ -70,8 +70,6 @@ flags startcat = Statement ;
     External_Location : Describes External Location ;
     Normal_Location : Describes Normal Location ;
     Abnormal_Location : Describes Abnormal Location ;
-    -- Normal_Size_Location : Describes Normal (Prop2 Size Location) ;
-    -- Abnormal_Size_Location : Describes Abnormal (Prop2 Size Location) ;
     mm_Size : Describes (mm 20) Size ;
     mm_lessThan_Size : Describes (mmLessThan 20) Size ;
 
@@ -79,13 +77,4 @@ flags startcat = Statement ;
 -- põrna suurus normis, struktuur ühtlane, kontrasteerumine iseärasusteta
 -- mõlemad neerud normaalse suuruse ja asetusega
 
--- fun aggregate : Statement -> Statement ;
--- def
--- aggregate (Pred x (ConjDescription (BaseDescription (Describe Normal Size proof) (Describe Normal Size _)))) =
---   Pred x (Describe Normal Size proof) ;
--- aggregate (Pred x (ConjDescription (BaseDescription (Describe Normal Location proof) (Describe Normal Location _)))) =
---   Pred x (Describe Normal Location proof) ;
--- aggregate (Pred x (ConjDescription (BaseDescription (Describe Normal _ _) (Describe Normal _ _)))) =
---   Pred x (Describe Normal (ConjProperty (BaseProperty Size Location)) Normal_Size_Location) ;
---
 }
