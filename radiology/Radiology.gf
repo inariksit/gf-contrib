@@ -5,8 +5,6 @@ flags startcat = Statement ;
   cat
     Statement ;
     Description ;
-    Descriptions2 ;
-    Descriptions3 ;
 
     Organ ;
     DualOrgan ;
@@ -17,21 +15,21 @@ flags startcat = Statement ;
     Describes Descriptor Property ; -- proof objects
 
   data
-    Pred : Organ -> Description -> Statement ;
-    PredNeg : Organ -> Description -> Statement ;
-    Describe : (d : Descriptor) -> (p : Property) -> Describes d p -> Description ;
+    Pred,
+    PredAdv : Organ -> Description -> Statement ;
 
-    Desc2 : Description -> Description -> Descriptions2 ;
-    Desc3 : Description -> Description -> Description -> Descriptions3 ;
-    Desc2as3 : Descriptions2 -> Descriptions3 ;
-    ConjDesc2 : Descriptions2 -> Description ;
-    ConjDesc3 : Descriptions3 -> Description ;
+    DescribePos,
+    DescribeNeg : (d : Descriptor) -> (p : Property) -> Describes d p -> Description ;
+
+    Desc2 : Description -> Description -> Description ;
+    Desc3 : Description -> Description -> Description -> Description ;
 
     -- To make text more natural; transfer rules in Haskell
-    AggregateProperty2 : (d : Descriptor) -> (p1, p2 : Property)
-              -> Describes d p1
-              -> Describes d p2
-              -> Description ; -- size and location are normal / normaalse suuruse ja asetusega
+    AggregateProperty2Pos,
+    AggregateProperty2Neg : (d : Descriptor) -> (p1, p2 : Property)
+                          -> Describes d p1
+                          -> Describes d p2
+                          -> Description ; -- size and location are normal / normaalse suuruse ja asetusega
 
     --AggregateDescriptor2 : Property -> Descriptor -> Descriptor -> Description ; -- location is normal and lateral
 

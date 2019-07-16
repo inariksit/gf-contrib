@@ -4,28 +4,46 @@ concrete RadiologyEng of Radiology =
 
   lincat
     Statement = S ;
-    Description = {s : R.CPolarity => S} ;
-    Descriptions2,
-    Descriptions3 = {s : R.CPolarity => [S]} ;
+    Description = {s : S ; adv : Adv} ;
 
     Organ,
     DualOrgan = OrganType ;
 
-    Property = NP ;
+    Property = CN ;
     Descriptor = AP ;
 
   lin
-    Pred org descn = mkS (topicAdv org) (descn.s ! positivePol.p) ; -- "the heart's size is normal"
-    PredNeg org descn = mkS (topicAdv org) (descn.s ! negativePol.p) ;
-    Describe descr prop proof = {s = \\p => mkS (lin Adv proof) (mkS (pol p) (mkCl prop descr))} ;
+    Pred org descn = mkS (topicAdv org) descn.s ; -- "the heart's size is normal"
+    PredAdv org descn = mkS (mkCl (orgNP org) descn.adv) ;
 
-    Desc2 d1 d2 = {s = \\p => G.BaseS (d1.s ! p) (d2.s ! p)} ;
-    Desc3 d1 d2 d3 = {s = \\p => G.ConsS (d3.s ! p) ((Desc2 d2 d1).s ! p)} ;
-    Desc2as3 d = d ;
-    ConjDesc2,
-    ConjDesc3 = \descs -> {s = \\p => G.ConjS and_Conj (descs.s ! p)} ;
+    DescribePos descr prop proof = {
+        s = mkS (lin Adv proof)
+                (mkS (mkCl (mkNP prop) descr)) ;
+        adv = SyntaxEng.mkAdv with_Prep (mkNP (mkCN descr prop)) } ;
+    DescribeNeg descr prop proof = {
+        s = mkS (lin Adv proof)
+                (mkS negativePol (mkCl (mkNP prop) descr)) ;
+        adv = SyntaxEng.mkAdv (mkPrep "not with") (mkNP (mkCN descr prop))} ;
 
-    AggregateProperty2 dr p q _ _ = {s = \\pl => mkS (pol pl) (mkCl (prop2 p q) dr)} ;
+    Desc2 d1 d2 = d1 ** {
+      s = G.ConjS and_Conj (G.BaseS d1.s d2.s) ;
+      adv = G.ConjAdv and_Conj (G.BaseAdv d1.adv d2.adv)} ;
+
+    Desc3 d1 d2 d3 = {
+      s = G.ConjS and_Conj (G.ConsS d3.s
+                                    (G.BaseS d1.s d2.s)
+                            ) ;
+      adv = G.ConjAdv and_Conj (G.ConsAdv d3.adv (G.BaseAdv d2.adv d1.adv))} ;
+
+    AggregateProperty2Pos dr p q pr1 pr2 = {
+      s = aggregateProperty dr p q pr1 pr2 positivePol ;
+      adv = SyntaxEng.mkAdv with_Prep (mkNP (mkCN dr (prop2 p q)))
+      } ;
+
+    AggregateProperty2Neg dr p q pr1 pr2 = {
+      s = aggregateProperty dr p q pr1 pr2 negativePol ;
+      adv = SyntaxEng.mkAdv (mkPrep "not with") (mkNP (mkCN dr (prop2 p q)))
+      } ;
 
     Both org = org ** {s = mkCN (mkA "both") org.s} ;
     Left org = {s = mkCN (mkA "left") org.s ; pl = False} ;
@@ -37,8 +55,8 @@ concrete RadiologyEng of Radiology =
     Kidney = dualorgan (mkN "kidney") ;
     Ovary = dualorgan (mkN "ovary") ;
 
-    Size = mkNP (mkN "size") ;
-    Location = mkNP (mkN "location") ;
+    Size = mkCN (mkN "size") ;
+    Location = mkCN (mkN "location") ;
 
     Lateral = mkAP (mkA "lateral") ;
     External = mkAP (mkA "external") ;
@@ -54,8 +72,8 @@ concrete RadiologyEng of Radiology =
 
 oper
 
-  prop2 : NP -> NP -> NP = \p1,p2 ->
-    G.ConjNP and_Conj (G.BaseNP p1 p2) ;
+  prop2 : CN -> CN -> CN = \p1,p2 ->
+    G.ConjCN and_Conj (G.BaseCN p1 p2) ;
 
   mm_A : A = mkA "mm" "mm" "mm" "mm" ;
 
@@ -68,18 +86,26 @@ oper
     organ n ** {pl = True} ;
 
   topicAdv : OrganType -> Adv = \org ->
-    SyntaxEng.mkAdv noPrep (mkNP (mkDet (E.GenNP (orgNP org))))
-    where {
-     orgNP : OrganType -> NP = \org ->
-        case org.pl of {
-          True => mkNP aPl_Det org.s ;
-          False => mkNP org.s }
-      } ;
+    SyntaxEng.mkAdv noPrep (mkNP (mkDet (E.GenNP (orgNP org)))) ;
 
-  pol : R.CPolarity -> Pol = \p -> case p of {
-    R.CPos => positivePol ;
-    R.CNeg _ => negativePol
-  } ;
+  orgNP : OrganType -> NP = \org ->
+    case org.pl of {
+      True => mkNP aPl_Det org.s ;
+      False => mkNP org.s } ;
+
+  aggregateProperty : Descriptor -> (p1, p2 : Property)
+                      -> (pr1, pr2 : SS)
+                      -> Pol
+                      -> S ;
+  aggregateProperty dr p q pr1 pr2 pol =
+    mkS (lin Adv (cc2 pr1 pr2))
+        (mkS pol (mkCl (plNP (prop2 p q)) dr)) ;
+
+  plNP : CN -> NP = \cn ->
+    let sgnp : NP = mkNP cn ;
+        plnp : NP = mkNP aPl_Det cn ;
+     in sgnp ** {a = plnp.a} ;
+
 lin
 
 -- proof objects
