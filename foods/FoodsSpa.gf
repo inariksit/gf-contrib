@@ -26,4 +26,20 @@ concrete FoodsSpa of Foods = open SyntaxSpa, StructuralSpa, ParadigmsSpa in {
     Delicious = mkAP (mkA "delicioso") ;
     Boring = mkAP (mkA "aburrido") ;
 
+oper
+-- Used in the post https://inariksit.github.io/gf/2018/08/28/gf-gotchas.html#re-export-rgl-opers-in-application-grammar
+
+    -- First try: export ParadigmsSpa and SyntaxSpa opers, use like this:
+    -- $ gf
+    -- > i -retain FoodsSpa.gf
+    -- > cc -one Pred (These (mkCN (mkN "tortilla"))) Delicious
+    -- will output "estas tortillas son deliciosas"
+    mkN : Str -> N = ParadigmsSpa.mkN ;
+    mkCN : N -> CN = SyntaxSpa.mkCN ;
+
+    -- The opers can be called anything. Use like this:
+    -- cc -one Pred (These (kind "tortilla")) (qual "vegano")
+    -- will output "estas tortillas son veganas"
+    kind : Str -> CN = \s -> mkCN (mkN s) ;
+    qual : Str -> AP = \s -> mkAP (mkA s) ;
 }
